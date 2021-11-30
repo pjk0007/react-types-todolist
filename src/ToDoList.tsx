@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { Z_STREAM_ERROR } from "zlib";
 
 /* function ToDoList() {
   const [toDo, setToDo] = useState("");
@@ -28,6 +29,7 @@ interface IForm {
   lastName: string;
   password1: string;
   password2: string;
+  extraError?: string;
 }
 
 function ToDoList() {
@@ -35,12 +37,22 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
     },
   });
-  const onValid = (data: any) => {};
+  const onValid = (data: IForm) => {
+    if (data.password1 !== data.password2) {
+      setError(
+        "password2",
+        { message: "Passwords are not the same" },
+        { shouldFocus: true }
+      );
+    }
+    //setError("extraError", { message: "Server offline." });
+  };
 
   return (
     <div>
@@ -63,6 +75,10 @@ function ToDoList() {
           {...register("firstName", {
             required: "First Name is required",
             minLength: 5,
+            validate: {
+              noNico: (value) =>
+                value.includes("nico") ? "no nicos allowed" : true,
+            },
           })}
           placeholder="First Name"
         />
@@ -89,6 +105,7 @@ function ToDoList() {
         />
         <span>{errors?.password2?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
