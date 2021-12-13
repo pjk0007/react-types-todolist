@@ -4,8 +4,8 @@ import CreateToDo from "./CreateToDo";
 import ToDoCard from "./ToDoCard";
 
 const MainBox = styled.div`
-  width: 40vw;
-  min-width: 500px;
+  max-width: 500px;
+  width: 100vw;
   margin: 5vh auto;
 `;
 
