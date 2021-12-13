@@ -1,8 +1,15 @@
-import { useSetRecoilState } from "recoil";
-import { Categories, IToDo, toDoState } from "../atoms";
+import { Button, ButtonGroup, ListItem, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { Categories, IToDo, LocalToDo, toDoState } from "../atoms";
 
 function ToDo({ text, category, id }: IToDo) {
-  const setToDos = useSetRecoilState(toDoState);
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  useEffect(() => {
+    const toDoLists = JSON.parse(localStorage.getItem(LocalToDo) ?? "[]");
+    setToDos(toDoLists);
+  }, []);
+
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { name },
@@ -18,25 +25,48 @@ function ToDo({ text, category, id }: IToDo) {
       ];
     });
   };
+  const onDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setToDos((oldToDos) => {
+      const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
+
+      return [
+        ...oldToDos.slice(0, targetIndex),
+        ...oldToDos.slice(targetIndex + 1),
+      ];
+    });
+  };
   return (
-    <li>
-      <span>{text}</span>
-      {category !== Categories.TO_DO && (
-        <button name={Categories.TO_DO} onClick={onClick}>
-          To Do
-        </button>
-      )}
-      {category !== Categories.DOING && (
-        <button name={Categories.DOING} onClick={onClick}>
-          Doing
-        </button>
-      )}
-      {category !== Categories.DONE && (
-        <button name={Categories.DONE} onClick={onClick}>
-          Done
-        </button>
-      )}
-    </li>
+    <ListItem
+      id={String(id)}
+      sx={{ display: "flex", justifyContent: "space-between" }}
+    >
+      <Typography sx={{ fontSize: 20 }}>
+        <Button sx={{ p: 0 }} onClick={onDelete}>
+          ❌
+        </Button>
+        {text}
+      </Typography>
+      <ButtonGroup
+        variant="contained"
+        aria-label="moving category button group"
+      >
+        {category !== Categories.TO_DO && (
+          <Button variant="outlined" name={Categories.TO_DO} onClick={onClick}>
+            To Do
+          </Button>
+        )}
+        {category !== Categories.DOING && (
+          <Button variant="outlined" name={Categories.DOING} onClick={onClick}>
+            Doing
+          </Button>
+        )}
+        {category !== Categories.DONE && (
+          <Button variant="outlined" name={Categories.DONE} onClick={onClick}>
+            Done
+          </Button>
+        )}
+      </ButtonGroup>
+    </ListItem>
   );
 }
 

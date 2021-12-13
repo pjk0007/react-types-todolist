@@ -1,29 +1,48 @@
+import styled from "styled-components";
+import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { categoryState, toDoState } from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { categoryState, LocalToDo, toDoState } from "../atoms";
+import { useEffect } from "react";
 
 interface IForm {
   toDo: string;
 }
 
+const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+`;
+
 function CreateToDo() {
-  const setToDos = useSetRecoilState(toDoState);
+  const [toDos, setToDos] = useRecoilState(toDoState);
   const category = useRecoilValue(categoryState);
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const handleValid = ({ toDo }: IForm) => {
     setToDos((prev) => [{ text: toDo, id: Date.now(), category }, ...prev]);
     setValue("toDo", "");
   };
+  useEffect(() => {
+    localStorage.setItem(LocalToDo, JSON.stringify(toDos));
+  }, [toDos]);
+
   return (
-    <form onSubmit={handleSubmit(handleValid)}>
-      <input
+    <Form onSubmit={handleSubmit(handleValid)}>
+      <TextField
         {...register("toDo", {
           required: "Please write a To Do",
         })}
-        placeholder="Write a to do"
+        id="toDo"
+        label="Write a to do"
+        variant="standard"
+        sx={{ m: 1, width: "100%" }}
       />
-      <button>Add</button>
-    </form>
+      <Button type="submit" variant="contained">
+        Add
+      </Button>
+    </Form>
   );
 }
 
