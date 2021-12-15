@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import AddCategroy from "./AddCategory";
 import CategorySelect from "./CategorySelect";
 import CreateToDo from "./CreateToDo";
 import ToDoCard from "./ToDoCard";
@@ -13,6 +14,7 @@ function ToDoList() {
   return (
     <MainBox>
       <CategorySelect />
+      <AddCategroy />
       <CreateToDo />
       <ToDoCard />
     </MainBox>
