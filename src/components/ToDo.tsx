@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, ListItem, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { Categories, IToDo, LocalToDo, toDoState } from "../atoms";
+import { useSetRecoilState } from "recoil";
+import { IToDo, LocalToDo, toDoState } from "../atoms";
 
 function ToDo({ text, category, id }: IToDo) {
-  const [toDos, setToDos] = useRecoilState(toDoState);
+  const setToDos = useSetRecoilState(toDoState);
   useEffect(() => {
     const toDoLists = JSON.parse(localStorage.getItem(LocalToDo) ?? "[]");
     setToDos(toDoLists);
@@ -50,18 +50,18 @@ function ToDo({ text, category, id }: IToDo) {
         variant="contained"
         aria-label="moving category button group"
       >
-        {category !== Categories.TO_DO && (
-          <Button variant="outlined" name={Categories.TO_DO} onClick={onClick}>
+        {category !== "TO DO" && (
+          <Button variant="outlined" name="TO_DO" onClick={onClick}>
             To Do
           </Button>
         )}
-        {category !== Categories.DOING && (
-          <Button variant="outlined" name={Categories.DOING} onClick={onClick}>
+        {category !== "DOING" && (
+          <Button variant="outlined" name="DOING" onClick={onClick}>
             Doing
           </Button>
         )}
-        {category !== Categories.DONE && (
-          <Button variant="outlined" name={Categories.DONE} onClick={onClick}>
+        {category !== "DONE" && (
+          <Button variant="outlined" name="DONE" onClick={onClick}>
             Done
           </Button>
         )}

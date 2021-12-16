@@ -6,10 +6,11 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useRecoilState } from "recoil";
-import { Categories, categoryState } from "../atoms";
+import { categoriesState, categoryState } from "../atoms";
 
 function CategorySelect() {
   const [category, setCategory] = useRecoilState(categoryState);
+  const [categories, setCategories] = useRecoilState(categoriesState);
   const onChange = (event: SelectChangeEvent) => {
     setCategory(event?.target.value as any);
   };
@@ -23,9 +24,12 @@ function CategorySelect() {
         value={category}
         onChange={onChange}
       >
-        <MenuItem value={Categories.TO_DO}>{Categories.TO_DO}</MenuItem>
-        <MenuItem value={Categories.DOING}>{Categories.DOING}</MenuItem>
-        <MenuItem value={Categories.DONE}>{Categories.DONE}</MenuItem>
+        {categories.map((item: string) => {
+          return <MenuItem value={item}>{item}</MenuItem>;
+        })}
+        {/* <MenuItem value={Category.TO_DO}>{Category.TO_DO}</MenuItem>
+        <MenuItem value={Category.DOING}>{Category.DOING}</MenuItem>
+        <MenuItem value={Category.DONE}>{Category.DONE}</MenuItem> */}
       </Select>
     </FormControl>
   );

@@ -1,22 +1,24 @@
 import { atom, selector } from "recoil";
 
 export const LocalToDo = "LocalToDo";
-
-export enum Categories {
-  "TO_DO" = "TO_DO",
-  "DOING" = "DOING",
-  "DONE" = "DONE",
-}
+export const LocalCategory = "LocalCategory";
 
 export interface IToDo {
   text: string;
   id: number;
-  category: Categories;
+  category: string;
 }
 
-export const categoryState = atom<Categories>({
+export const categoriesDefault = ["TO DO", "DOING", "DONE"];
+
+export const categoriesState = atom<string[]>({
+  key: "categories",
+  default: categoriesDefault,
+});
+
+export const categoryState = atom<string>({
   key: "category",
-  default: Categories.TO_DO,
+  default: categoriesDefault[0],
 });
 
 export const toDoState = atom<IToDo[]>({

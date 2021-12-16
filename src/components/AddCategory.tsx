@@ -3,6 +3,8 @@ import { Box } from "@mui/system";
 import styled from "styled-components";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { categoriesState } from "../atoms";
 
 interface IForm {
   category: string;
@@ -29,10 +31,15 @@ const Form = styled.form`
 
 function AddCategroy() {
   const [open, setOpen] = React.useState(false);
+  const [categories, setCategories] = useRecoilState(categoriesState);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { register, handleSubmit, setValue } = useForm<IForm>();
-  const handleValid = ({ category }: IForm) => {};
+  const handleValid = ({ category }: IForm) => {
+    setCategories((prev) => [...prev, category]);
+    setValue("category", "");
+    handleClose();
+  };
 
   return (
     <div>
@@ -52,7 +59,7 @@ function AddCategroy() {
               {...register("category", {
                 required: "Please write a To Do",
               })}
-              id="toDo"
+              id="category"
               label="Write your Category"
               variant="standard"
               sx={{ m: 1, width: "100%" }}
